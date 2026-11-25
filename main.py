@@ -4,6 +4,7 @@ Writes a single joke about Monday mornings (1-200 UTF-8 characters) to
 /output/entry.txt. Standard library only, fully deterministic.
 """
 
+import hashlib
 import os
 
 ENTRY = (
@@ -43,7 +44,10 @@ def write_entry(path, text):
     """Write the validated entry to path, then read it back and verify.
 
     Raises ValueError if the text fails validation, and IOError if the
-    bytes read back differ from what was written.
+    bytes read back differ from what was written. The verification is
+    byte-exact: the read-back must have the same UTF-8 byte length as
+    the entry (so no trailing newline sneaks in) and the same sha256
+    digest.
     """
     validated = validate_entry(text)
     directory = os.path.dirname(path)
@@ -51,16 +55,30 @@ def write_entry(path, text):
         os.makedirs(directory, exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(validated)
-    with open(path, "r", encoding="utf-8", newline="") as handle:
-        round_tripped = handle.read()
-    if round_tripped != validated:
+    with open(path, "rb") as handle:
+        raw = handle.read()
+    intended = validated.encode("utf-8")
+    if len(raw) != len(intended):
+        raise IOError("read-back byte length differs from entry bytes")
+    if raw != intended:
         raise IOError("read-back mismatch: output differs from entry text")
+    if hashlib.sha256(raw).hexdigest() != hashlib.sha256(intended).hexdigest():
+        raise IOError("read-back digest mismatch")
     return path
 
 
+def output_path():
+    """Entry destination: $MAKEFUN_OUTPUT_DIR/entry.txt, else /output."""
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR")
+    if out_dir:
+        return os.path.join(out_dir, "entry.txt")
+    return OUTPUT_PATH
+
+
 def main():
-    write_entry(OUTPUT_PATH, ENTRY)
-    print("Wrote %d characters to %s" % (len(ENTRY), OUTPUT_PATH))
+    path = output_path()
+    write_entry(path, ENTRY)
+    print("Wrote %d characters to %s" % (len(ENTRY), path))
 
 
 if __name__ == "__main__":
