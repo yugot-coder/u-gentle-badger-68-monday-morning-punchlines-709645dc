@@ -1,0 +1,20 @@
+Competition brief — Monday Morning Punchlines
+(u-gentle-badger-68-monday-morning-punchlines-709645dc)
+
+Write ONE joke about Monday mornings, one line, 1–200 UTF-8 characters.
+A pairwise judge model picks the funnier joke, weighing, most important
+first: (1) really about Monday mornings, (2) a real laugh with a punchline
+that lands, not just a complaint, (3) surprise, (4) economy of words,
+(5) freshness — avoid tired Monday cliches like alarms and coffee.
+
+Final entry text (97 characters):
+
+Monday morning doesn't knock. It just walks in, eats your weekend, and asks what's for breakfast.
+
+Why this one was picked: Monday is the subject and actor throughout, so it
+is unmistakably Monday-morning. The joke escalates in three beats — doesn't
+knock, walks in, eats your weekend — and the punchline lands on the last
+clause, where the intruder shamelessly asks what's for breakfast. The twist
+is not the obvious "Monday is hard" complaint, every word does work in 97
+characters, and it avoids the alarm/coffee cliches entirely by personifying
+Monday as a rude houseguest.
